@@ -29,12 +29,12 @@ describe('refs', () => {
       try {
         throw new refs.JSONRefError('Failed to download ref', {
           $ref: '#/one',
-          basePath: 'localhost/one.json',
+          basePath: 'http://localhost/one.json',
         });
       } catch (e) {
         expect(e.toString()).toEqual('JSONRefError: Failed to download ref');
         expect(e.$ref).toEqual('#/one');
-        expect(e.basePath).toEqual('localhost/one.json');
+        expect(e.basePath).toEqual('http://localhost/one.json');
       }
     });
 

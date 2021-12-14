@@ -1,5 +1,4 @@
 import getIn from 'lodash/get';
-import url from 'url';
 import cookie from 'cookie';
 import { isPlainObject } from 'is-plain-object';
 
@@ -9,7 +8,13 @@ import SWAGGER2_PARAMETER_BUILDERS from './swagger2/parameter-builders.js';
 import * as OAS3_PARAMETER_BUILDERS from './oas3/parameter-builders.js';
 import oas3BuildRequest from './oas3/build-request.js';
 import swagger2BuildRequest from './swagger2/build-request.js';
-import { getOperationRaw, legacyIdFromPathMethod, isOAS3 } from '../helpers.js';
+import {
+  getOperationRaw,
+  legacyIdFromPathMethod,
+  isOAS3,
+  urlResolve,
+  urlParse,
+} from '../helpers.js';
 
 const arrayOrEmpty = (ar) => (Array.isArray(ar) ? ar : []);
 
@@ -328,8 +333,8 @@ function oas3BaseUrl({ spec, pathName, method, server, contextUrl, serverVariabl
 function buildOas3UrlWithContext(ourUrl = '', contextUrl = '') {
   // relative server url should be resolved against contextUrl
   const parsedUrl =
-    ourUrl && contextUrl ? url.parse(url.resolve(contextUrl, ourUrl)) : url.parse(ourUrl);
-  const parsedContextUrl = url.parse(contextUrl);
+    ourUrl && contextUrl ? urlParse(urlResolve(contextUrl, ourUrl)) : urlParse(ourUrl);
+  const parsedContextUrl = urlParse(contextUrl);
 
   const computedScheme =
     stripNonAlpha(parsedUrl.protocol) || stripNonAlpha(parsedContextUrl.protocol) || '';
@@ -362,7 +367,7 @@ function getVariableTemplateNames(str) {
 
 // Compose the baseUrl ( scheme + host + basePath )
 function swagger2BaseUrl({ spec, scheme, contextUrl = '' }) {
-  const parsedContextUrl = url.parse(contextUrl);
+  const parsedContextUrl = urlParse(contextUrl);
   const firstSchemeInSpec = Array.isArray(spec.schemes) ? spec.schemes[0] : null;
 
   const computedScheme =

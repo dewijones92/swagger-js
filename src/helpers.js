@@ -228,3 +228,19 @@ export function normalizeSwagger(parsedSpec) {
 
   return parsedSpec;
 }
+
+// WHATWG URL API replacement for url.resolve function
+export function urlResolve(from, to) {
+  const resolvedUrl = new URL(to, new URL(from, 'resolve://'));
+  if (resolvedUrl.protocol === 'resolve:') {
+    // `from` is a relative URL.
+    const { pathname, search, hash } = resolvedUrl;
+    return pathname + search + hash;
+  }
+  return resolvedUrl.toString();
+}
+
+// WHATWG URL API replacement for url.resolve function
+export function urlParse(url) {
+  return new URL(url);
+}
