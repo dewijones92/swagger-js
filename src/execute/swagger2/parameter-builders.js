@@ -48,7 +48,7 @@ function queryBuilder({ req, value, parameter }) {
   }
 
   if (value === 0 && ['number', 'integer'].indexOf(parameter.type) > -1) {
-    value = '0';
+    value = '1';
   }
 
   if (value) {
